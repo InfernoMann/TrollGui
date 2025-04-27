@@ -1,0 +1,151 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local TweenService = game:GetService("TweenService")
+local Camera = workspace.CurrentCamera
+
+-- Создаем ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FlyingMemeGUI"
+screenGui.Parent = playerGui
+
+-- Функция рандомного цвета
+local function getRandomColor()
+    return Color3.fromRGB(math.random(0, 255), math.random(0, 255), math.random(0, 255))
+end
+
+-- Функция рандомного текста
+local function getRandomText()
+    local phrases = {
+        "You are an Idiot!",
+        "Memes!",
+        "LOL!",
+        "XD",
+        "Click me!",
+        "HAHA!",
+        "GigaChad",
+        "Noob!",
+        "Pro!",
+        "UwU",
+        "Troll!",
+        "Omg!",
+        "Victory!",
+        "Defeat!",
+        "Meme Time!",
+        "Boom!",
+        "Yeet!",
+        "NANI?",
+        "Bruh",
+        "Sus",
+        "Among Us",
+        "Just Do It",
+        "PogChamp",
+        "rekt",
+        "Nice try!",
+        "Fatality!",
+        "Epic Win!",
+        "Try Again!",
+        "Legendary!",
+        "Mission Failed!",
+        "Ok Boomer!",
+        "GG!",
+        "You got jebaited!",
+        "Wasted!",
+        "Press F",
+        "Why tho?",
+        "Triggered!",
+        "It’s over 9000!",
+        "Sans?!",
+        "Spaghetti!",
+        "OOF!",
+        "E",
+        "RIP",
+        "Random!",
+        "Dance time!",
+        "More memes!",
+        "Crazy!",
+        "Insane!",
+        "Loading...",
+        "Achievement Unlocked!"
+    }
+    return phrases[math.random(1, #phrases)]
+end
+
+-- Функция движения элемента
+local function flyAround(guiObject)
+    while true do
+        local randomX = math.random(0, Camera.ViewportSize.X - guiObject.AbsoluteSize.X)
+        local randomY = math.random(0, Camera.ViewportSize.Y - guiObject.AbsoluteSize.Y)
+        local tween = TweenService:Create(guiObject, TweenInfo.new(math.random(3,6), Enum.EasingStyle.Linear, Enum.EasingDirection.InOut),
+            {Position = UDim2.new(0, randomX, 0, randomY)})
+        tween:Play()
+        tween.Completed:Wait()
+    end
+end
+
+-- Функция создания кнопки
+local function createFlyingButton()
+    local button = Instance.new("TextButton")
+    button.Text = getRandomText()
+    button.Font = Enum.Font.GothamBlack
+    button.TextSize = math.random(20, 30)
+    button.TextColor3 = getRandomColor()
+    button.BackgroundColor3 = getRandomColor()
+    button.Size = UDim2.new(0, math.random(150, 250), 0, math.random(50, 80))
+    button.Position = UDim2.new(0, math.random(0, Camera.ViewportSize.X - 200), 0, math.random(0, Camera.ViewportSize.Y - 100))
+    button.Parent = screenGui
+    button.Active = true
+    button.Draggable = true
+
+    button.MouseButton1Click:Connect(function()
+        button.BackgroundColor3 = getRandomColor()
+        button.Text = "Clicked!"
+    end)
+
+    task.spawn(function()
+        flyAround(button)
+    end)
+end
+
+-- Функция создания текста
+local function createFlyingText()
+    local label = Instance.new("TextLabel")
+    label.Text = getRandomText()
+    label.Font = Enum.Font.GothamBold
+    label.TextSize = math.random(24, 32)
+    label.TextColor3 = getRandomColor()
+    label.BackgroundTransparency = 1
+    label.Size = UDim2.new(0, math.random(200, 400), 0, math.random(40, 80))
+    label.Position = UDim2.new(0, math.random(0, Camera.ViewportSize.X - 200), 0, math.random(0, Camera.ViewportSize.Y - 80))
+    label.Parent = screenGui
+
+    task.spawn(function()
+        flyAround(label)
+    end)
+end
+
+-- Функция проигрывания зацикленного звука
+local function playLoopSound()
+    local sound = Instance.new("Sound")
+    sound.Name = "MemeLoopSound"
+    sound.SoundId = "rbxassetid://121367453748378" -- ваш звук
+    sound.Volume = 1
+    sound.Looped = true
+    sound.Parent = workspace
+    sound:Play()
+end
+
+-- Генерация 500 кнопок
+for i = 1, 500 do
+    createFlyingButton()
+end
+
+-- Генерация 50 текстов
+for i = 1, 50 do
+    createFlyingText()
+end
+
+-- Воспроизводим звук
+playLoopSound()
+
+print("🔥 500 кнопок + 50 текстов + мемный звук зациклен!")
